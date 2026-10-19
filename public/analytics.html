@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterGuardian | Analytics</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/style.css?v=pro2">
+</head>
+<body class="inner-page">
+
+    <header class="top-nav">
+        <a class="brand" href="/">
+            <span class="brand-icon">D</span>
+            DisasterGuardian<span class="brand-pro"> PRO</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/map.html">Disaster Map</a>
+            <a class="active" href="/analytics.html">Analytics</a>
+            <a href="/assistant.html">Disaster Assistant</a>
+        </nav>
+    </header>
+
+    <main class="inner-main">
+        <section class="page-heading">
+            <p class="eyebrow">DATA &amp; INSIGHTS</p>
+            <h1>Disaster <span>Analytics</span></h1>
+            <p>
+                Explore weather forecasts and environmental indicators
+                for every Indian state and union territory (measured at the capital).
+            </p>
+        </section>
+
+        <section class="analytics-toolbar">
+            <label for="analyticsCity">Select state / UT</label>
+            <select id="analyticsCity">
+                <option value="Assam">Assam</option>
+            </select>
+
+            <button id="refreshAnalytics" type="button">
+                Refresh data
+            </button>
+        </section>
+
+        <p id="analyticsStatus" class="analytics-status" role="status">
+            Loading forecast data...
+        </p>
+
+        <section class="analytics-cards">
+            <article class="analytics-card">
+                <span class="metric-label">Current forecast temperature</span>
+                <h2 id="analyticsTemp">-- °C</h2>
+                <p>Forecast for the latest available hour</p>
+            </article>
+
+            <article class="analytics-card">
+                <span class="metric-label">Maximum forecast rain probability</span>
+                <h2 id="analyticsRain">-- %</h2>
+                <p>Highest hourly precipitation probability</p>
+            </article>
+
+            <article class="analytics-card">
+                <span class="metric-label">Maximum forecast wind speed</span>
+                <h2 id="analyticsWind">-- km/h</h2>
+                <p>Across the available forecast period</p>
+            </article>
+        </section>
+
+        <section class="analytics-chart-grid">
+            <article class="chart-panel">
+                <div class="chart-heading">
+                    <div>
+                        <p class="eyebrow">TEMPERATURE</p>
+                        <h2>Hourly temperature</h2>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </article>
+
+            <article class="chart-panel">
+                <div class="chart-heading">
+                    <div>
+                        <p class="eyebrow">PRECIPITATION</p>
+                        <h2>Rain probability</h2>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="rainChart"></canvas>
+                </div>
+            </article>
+
+            <article class="chart-panel chart-panel-wide">
+                <div class="chart-heading">
+                    <div>
+                        <p class="eyebrow">WIND CONDITIONS</p>
+                        <h2>Hourly wind speed</h2>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="windChart"></canvas>
+                </div>
+            </article>
+        </section>
+
+        <p class="data-disclaimer">
+            These charts show weather forecast data, not confirmed disaster
+            incidents. Forecasts may change. Follow official authorities for
+            emergency warnings.
+        </p>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="/states.js"></script>
+    <script src="/analytics.js?v=states"></script>
+</body>
+</html>

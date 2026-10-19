@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterGuardian | Disaster Assistant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/style.css?v=pro2">
+</head>
+<body class="inner-page">
+
+    <header class="top-nav">
+        <a class="brand" href="/">
+            <span class="brand-icon">D</span>
+            DisasterGuardian<span class="brand-pro"> PRO</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/map.html">Disaster Map</a>
+            <a href="/analytics.html">Analytics</a>
+            <a class="active" href="/assistant.html">Disaster Assistant</a>
+        </nav>
+    </header>
+
+    <main class="inner-main assistant-main">
+        <section class="page-heading">
+            <p class="eyebrow">PREPAREDNESS GUIDANCE</p>
+            <h1>Disaster <span>Assistant</span></h1>
+            <p>
+                Ask for general disaster preparedness advice, safety
+                checklists, and guidance on responding to emergencies.
+            </p>
+        </section>
+
+        <section class="assistant-layout">
+            <aside class="assistant-sidebar">
+                <h2>Suggested questions <span id="faqCount" class="faq-count"></span></h2>
+
+                <input
+                    type="search"
+                    id="faqSearch"
+                    class="faq-search"
+                    placeholder="Search questions…"
+                    aria-label="Search suggested questions"
+                >
+
+                <select id="faqCategory" class="faq-category" aria-label="Filter questions by topic">
+                    <option value="">All topics</option>
+                </select>
+
+                <div id="faqList" class="faq-list"></div>
+
+                <p class="assistant-note">
+                    In immediate danger, call 112 and follow official
+                    instructions.
+                </p>
+            </aside>
+
+            <section class="chat-panel">
+                <div class="chat-header">
+                    <div class="assistant-avatar">D</div>
+                    <div>
+                        <h2>Disaster Assistant</h2>
+                        <p>Disaster preparedness assistant</p>
+                    </div>
+                    <span class="assistant-status">Ready</span>
+                </div>
+
+                <div
+                    id="chatMessages"
+                    class="chat-messages"
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Conversation"
+                >
+                    <div class="chat-message assistant-message">
+                        <strong>Disaster Assistant</strong>
+                        <p>
+                            Hello! I can help with floods, wildfires, earthquakes, cyclones, heatwaves, first aid and emergency planning. Pick a suggested question or type your own.
+                        </p>
+                    </div>
+                </div>
+
+                <form id="chatForm" class="chat-form">
+                    <label class="visually-hidden" for="chatInput">
+                        Your question
+                    </label>
+
+                    <textarea
+                        id="chatInput"
+                        placeholder="Ask about disaster preparedness..."
+                        rows="2"
+                        maxlength="2000"
+                        required
+                    ></textarea>
+
+                    <button id="sendButton" type="submit">
+                        Send message
+                    </button>
+                </form>
+
+                <p class="chat-disclaimer">
+                    Answers are general guidance and can be incomplete. Official emergency alerts and instructions take priority.
+                </p>
+            </section>
+        </section>
+    </main>
+
+    <script src="/assistant-faq.js"></script>
+    <script src="/assistant.js?v=faq"></script>
+</body>
+</html>

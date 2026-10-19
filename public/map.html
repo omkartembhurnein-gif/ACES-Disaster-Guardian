@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>Disaster Map | DisasterGuardian Pro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="/style.css?v=pro2">
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body class="home-page inner-page">
+
+  <header class="site-header">
+    <a href="/" class="brand">
+      <span class="brand-icon">D</span>
+      <span>DisasterGuardian<span class="brand-pro"> PRO</span></span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="/">Home</a>
+      <a class="active" href="/map.html">Disaster Map</a>
+      <a href="/analytics.html">Analytics</a>
+      <a href="/assistant.html">Disaster Assistant</a>
+    </nav>
+
+    <span class="page-status">
+      <span class="status-dot"></span> SATELLITE + WEATHER
+    </span>
+  </header>
+
+  <main class="inner-main">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">GEOGRAPHIC MONITORING</span>
+        <h1>Disaster Map</h1>
+        <p>Satellite wildfire and flood detection with 12-hour outlooks, plus
+          current weather, for every Indian state and union territory.</p>
+      </div>
+
+      <div class="city-control">
+        <label for="stateSelect">Select state / UT</label>
+        <select id="stateSelect">
+          <option value="Assam">Assam</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="map-info-banner">
+      <span class="info-symbol">i</span>
+      <p>
+        Wildfire perimeters come from VIIRS thermal anomalies and flood zones
+        from the NASA VIIRS flood map. Both are satellite estimates, not
+        confirmed incidents or official forecasts. Check official alerts before
+        making safety decisions.
+      </p>
+      <a id="authorityLink" href="https://ndma.gov.in/" target="_blank"
+        rel="noopener noreferrer">National Disaster Management Authority ↗</a>
+    </div>
+
+    <section class="map-layout">
+      <div class="map-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Wildfire &amp; flood detections</h2>
+            <p id="fireSubtitle">Loading satellite detections…</p>
+          </div>
+          <div class="layer-toggles" role="group" aria-label="Map layers">
+            <label class="layer-toggle fire-toggle">
+              <input type="checkbox" id="toggleFires" checked> Wildfires
+            </label>
+            <label class="layer-toggle flood-toggle">
+              <input type="checkbox" id="toggleFloods" checked> Floods
+            </label>
+            <span class="map-tag" id="fireModeTag">LOADING</span>
+          </div>
+        </div>
+        <div id="disasterMap"></div>
+
+        <div class="forecast-control">
+          <div class="forecast-slider">
+            <label for="forecastSlider">
+              Wildfire forecast horizon <strong id="forecastLabel">+12 h</strong>
+            </label>
+            <input type="range" id="forecastSlider" min="0" max="4" step="1"
+              value="4" aria-describedby="forecastValid">
+            <div class="forecast-ticks" aria-hidden="true">
+              <span>Now</span><span>+1 h</span><span>+3 h</span><span>+6 h</span><span>+12 h</span>
+            </div>
+            <small id="forecastValid" class="forecast-valid"></small>
+          </div>
+          <button id="forecastPlay" class="btn btn-secondary" type="button">
+            Play ▶
+          </button>
+        </div>
+
+        <div class="map-legend">
+          <span><i class="legend-dot detection-dot"></i> Fire detection</span>
+          <span><i class="legend-swatch perimeter-swatch"></i> Fire perimeter</span>
+          <span><i class="legend-swatch forecast-swatch"></i> Fire forecast +1 / 3 / 6 / 12 h</span>
+          <span><i class="legend-swatch flood-swatch"></i> Flood zone</span>
+          <span><i class="legend-dot city-dot"></i> State capital</span>
+          <span><i class="legend-dot weather-dot"></i> Selected state</span>
+        </div>
+      </div>
+
+      <aside class="location-panel">
+        <span class="section-kicker">SELECTED STATE</span>
+        <h2 id="selectedCity">Assam</h2>
+        <p id="selectedPlace">Weather at the state capital</p>
+
+        <div class="location-metric">
+          <span>Temperature</span>
+          <strong id="mapTemp">Loading…</strong>
+        </div>
+        <div class="location-metric">
+          <span>Rain probability</span>
+          <strong id="mapRain">Loading…</strong>
+        </div>
+        <div class="location-metric">
+          <span>Wind speed</span>
+          <strong id="mapWind">Loading…</strong>
+        </div>
+
+        <p class="data-source" id="mapUpdated">
+          Connecting to weather service…
+        </p>
+
+        <button id="refreshMap" class="primary-button map-refresh" type="button">
+          Refresh weather ↻
+        </button>
+      </aside>
+    </section>
+
+    <section class="map-layout fire-layout">
+      <div class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Active incidents</h2>
+            <p>Wildfires ranked by intensity, floods by area · select one to zoom,
+              or report it to the nearest services</p>
+          </div>
+          <span class="map-tag" id="incidentCount">0 INCIDENTS</span>
+        </div>
+
+        <div class="incident-filter" role="tablist" aria-label="Incident type">
+          <button type="button" class="filter-button active" data-filter="all"
+            role="tab" aria-selected="true">All</button>
+          <button type="button" class="filter-button" data-filter="fire"
+            role="tab" aria-selected="false">Wildfires <span id="countFire">0</span></button>
+          <button type="button" class="filter-button" data-filter="flood"
+            role="tab" aria-selected="false">Floods <span id="countFlood">0</span></button>
+        </div>
+
+        <ol id="incidentList" class="incident-list">
+          <li class="incident-empty">Loading satellite detections…</li>
+        </ol>
+      </div>
+
+      <aside class="location-panel fire-stats">
+        <span class="section-kicker">PIPELINE STATS</span>
+        <h2>Detection engine</h2>
+        <p id="fireSource">Ingest → detect → perimeter → outlook</p>
+
+        <div class="location-metric">
+          <span>Fire detections used</span>
+          <strong id="statDetections">–</strong>
+        </div>
+        <div class="location-metric">
+          <span>Burning area now / +12 h</span>
+          <strong id="statArea">–</strong>
+        </div>
+        <div class="location-metric">
+          <span>Flooded area</span>
+          <strong id="statFloodArea">–</strong>
+        </div>
+        <div class="location-metric">
+          <span>Cloud-hidden (flood map)</span>
+          <strong id="statCloud">–</strong>
+        </div>
+        <div class="location-metric">
+          <span>Payload size</span>
+          <strong id="statPayload">–</strong>
+        </div>
+        <div class="location-metric">
+          <span>Pipeline latency</span>
+          <strong id="statLatency">–</strong>
+        </div>
+
+        <div class="city-control fire-mode">
+          <label for="fireMode">Wildfire data</label>
+          <select id="fireMode">
+            <option value="auto">Auto (live, else replay)</option>
+            <option value="live">Live NASA FIRMS</option>
+            <option value="replay">Replay sample</option>
+          </select>
+        </div>
+
+        <div class="city-control fire-mode">
+          <label for="floodDate">Flood imagery date</label>
+          <select id="floodDate"></select>
+        </div>
+
+        <button id="runFires" class="primary-button" type="button">
+          Run pipeline ↻
+        </button>
+
+        <div class="fire-downloads">
+          <a id="downloadGeojson" class="btn btn-secondary"
+            href="/api/fires.geojson" download>Fires GeoJSON ↓</a>
+          <a id="downloadKml" class="btn btn-secondary"
+            href="/api/fires.kml" download>Fires KML ↓</a>
+          <a id="downloadFloods" class="btn btn-secondary"
+            href="/api/floods.geojson" download>Floods GeoJSON ↓</a>
+        </div>
+
+        <p class="data-source" id="fireUpdated">Connecting to detection pipeline…</p>
+      </aside>
+    </section>
+
+    <section class="official-panel">
+      <div>
+        <span class="section-kicker">OFFICIAL INFORMATION</span>
+        <h2>Check verified disaster alerts</h2>
+        <p>Satellites can raise false detections and miss fires or floods under
+          cloud. Use official agencies for confirmed notices.</p>
+      </div>
+      <a class="primary-button" href="https://sachet.ndma.gov.in/"
+        target="_blank" rel="noopener noreferrer">
+        View official alerts (NDMA Sachet) ↗
+      </a>
+    </section>
+  </main>
+
+  <dialog id="reportDialog" class="report-dialog" aria-labelledby="reportTitle">
+    <form method="dialog" class="report-close-form">
+      <button class="report-close" aria-label="Close">×</button>
+    </form>
+
+    <span class="section-kicker" id="reportKicker">REPORT INCIDENT</span>
+    <h2 id="reportTitle">Report incident</h2>
+    <p id="reportSummary" class="report-summary"></p>
+
+    <div class="report-notice" id="reportNotice">
+      DisasterGuardian does not alert services automatically. Use the buttons
+      below to call or message them yourself. Satellite detections can be false
+      alarms, so say only what you can confirm.
+    </div>
+
+    <div class="report-numbers" id="reportNumbers"></div>
+
+    <div class="report-columns">
+      <section>
+        <h3>Nearest fire stations</h3>
+        <ul id="reportFire" class="service-list"><li>Searching…</li></ul>
+        <a id="reportFireSearch" class="report-more" target="_blank"
+          rel="noopener noreferrer" href="#">Find more fire stations on Google Maps ↗</a>
+      </section>
+      <section>
+        <h3>Nearest hospitals</h3>
+        <ul id="reportHospital" class="service-list"><li>Searching…</li></ul>
+        <a id="reportHospitalSearch" class="report-more" target="_blank"
+          rel="noopener noreferrer" href="#">Find more hospitals on Google Maps ↗</a>
+      </section>
+    </div>
+
+    <label for="reportText" class="report-label">Report message (you can edit it)</label>
+    <textarea id="reportText" rows="8"></textarea>
+
+    <div class="report-actions">
+      <button type="button" id="reportCopy" class="primary-button">Copy report</button>
+      <button type="button" id="reportShare" class="secondary-button">Share…</button>
+      <span id="reportStatus" class="report-status" role="status"></span>
+    </div>
+    <p class="report-source" id="reportSource"></p>
+  </dialog>
+
+  <footer class="site-footer">
+    <span>DisasterGuardian Pro</span>
+    <span>Awareness · Preparedness · Resilience</span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/states.js"></script>
+  <script src="/map-page.js?v=states"></script>
+  <script src="/fire-intel.js?v=report2"></script>
+</body>
+</html>
